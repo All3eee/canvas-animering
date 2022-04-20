@@ -5,6 +5,11 @@ canvas.style.width = "100%";
 canvas.style.height = "100%";
 
 let c = canvas.getContext("2d");
+const midx = canvas.width/2
+const midy = canvas.height/2
+let rectPosx = canvas.width * 0.1
+let rectPosy = canvas.height / 0.1
+
 
 // Startläge kvadraterna
 // Slumpas fram med lite marginal från kanterna
@@ -46,16 +51,16 @@ document.onkeydown = function (e) {
   const key = e.key;
   switch (key) {
     case "ä":
-      console.log("Röd kvadrat ska byta riktning i x-led");
+      dxRed = -dxRed
       break;
     case "ö":
-      console.log("Röd kvadrat ska byta riktning i y-led");
+      dyRed = -dyRed
       break;
     case "a":
-      console.log("Gul kvadrat ska byta riktning i x-led");
+      dxYellow = -dxYellow
       break;
     case "s":
-      console.log("Gul kvadrat ska byta riktning i y-led");
+      dyYellow = -dyYellow
       break;
     case " ": // Mellanslag
       console.log(`Runtime: ${runtime} sekunder.`);
@@ -72,7 +77,6 @@ function drawRects() {
   // Håller koll på tiden som programmet varit igång
   ticks += 1;
   runtime = (ticks / 1000) * updateFrequency; // i sekunder
-
   if (redBounces >= 100 || yellowBounces >= 100) {
     clearInterval(myTimer);
     alert("Nog med studsar!\nNu vet du hur en animering avslutas.");
@@ -80,9 +84,12 @@ function drawRects() {
 
   // Rensar gammalt visuellt innehåll
   c.clearRect(0, 0, canvas.width, canvas.height);
-
+  c.beginPath()
+  c.rect(canvas.width*0.1, canvas.height*0.1, canvas.width*0.8, canvas.height*0.8);
+  c.stroke()
   // Kolla om riktningsändring ska göras pga kant
   checkBounce();
+  checkpass();  
 
   // Beräkna nytt läge
   xPosRed += dxRed;
@@ -106,6 +113,7 @@ function drawRects() {
   yCenterYellow = (yPosYellow + yPosYellow + sizeYellow) / 2;
 }
 
+let hits = 0;
 // Då respektive kvadrat kommer till en ytterkant ska de studsa
 function checkBounce() {
   if (xPosRed < 0 || xPosRed > canvas.width - sizeRed) {
@@ -122,8 +130,29 @@ function checkBounce() {
     dyRed = -dyRed;
     redBounces += 1;
   }
+
   if (yPosYellow < 0 || yPosYellow > canvas.height - sizeYellow) {
     dyYellow = -dyYellow;
     yellowBounces += 1;
   }
+
+  if (xPosRed < canvas.width * 0.1 + 2 && xPosRed > canvas.width * 0.1 - 2  xPosRed > canvas.width * 0.9 - sizeRed - 2 && xPosRed < canvas.width * 0.9 - sizeRed + 2 ) {
+    hits = hits + 0.5;
+  }
+
+  if (xPosYellow < canvas.width * 0.1 + 2 && xPosYellow > canvas.width * 0.1 - 2  xPosYellow > canvas.width * 0.9 - sizeYellow - 2 && xPosYellow < canvas.width * 0.9 - sizeYellow + 2 ) {
+    hits = hits + 0.5;
+  }
+
+  if (yPosRed < canvas.height * 0.1 + 2 && yPosRed > canvas.height * 0.1 - 2  yPosRed > canvas.height * 0.9 - sizeRed - 2 && yPosRed < canvas.height * 0.9 - sizeRed + 2) {
+    hits = hits + 0.5;
+  }
+
+  if (yPosYellow < canvas.height * 0.1 + 2 && yPosYellow > canvas.height * 0.1 - 2  yPosYellow > canvas.height * 0.9 - sizeYellow - 2 && yPosYellow < canvas.height * 0.9 - sizeYellow + 2) {
+    hits = hits + 0.5;
+  }
+  console.log(hits)
 }
+
+
+
